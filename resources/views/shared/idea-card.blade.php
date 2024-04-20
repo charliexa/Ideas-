@@ -21,9 +21,24 @@
         </div>
     </div>
     <div class="card-body">
-        <p class="fs-6 fw-light text-muted">
-            {{ $idea->content }}
-        </p>
+        @if ($editing ?? false)
+            <form action="{{ route("idea.update", $idea->id) }}" method="post">
+                @csrf
+                <div class="mb-3">
+                    <textarea name="content" class="form-control" id="content" rows="3">{{ $idea->content }}</textarea>
+                    @error("content")
+                        <span class="d-block fs-6 text-danger mt-2">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="">
+                    <button type="submit" class="btn btn-dark">Share</button>
+                </div>
+            </form>
+        @else
+            <p class="fs-6 fw-light text-muted">
+                {{ $idea->content }}
+            </p>
+        @endif
         <div class="d-flex justify-content-between">
             <div>
                 <a href="#" class="fw-light nav-link fs-6"> <span class="fas fa-heart me-1">

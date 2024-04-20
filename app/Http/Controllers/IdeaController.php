@@ -32,14 +32,20 @@ class IdeaController extends Controller
 
         $editing = true;
 
-
-        view("ideas.show", compact("idea", "editing"));
+        return view("ideas.show", compact("idea", "editing"));
     }
 
     public function destroy(Idea $idea) {
         $idea->delete();
 
         return redirect()->route("dashboard")->with("success", "Idea Deleted Successfully!");
+    }
+
+    public function update(Idea $idea) {
+
+        $idea->content = request()->get();
+
+        return view("ideas.show", compact("idea", "editing"));
     }
 
 }
