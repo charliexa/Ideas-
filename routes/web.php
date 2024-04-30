@@ -8,17 +8,25 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [DashboardController::class, "index"])->name("dashboard");
 
-Route::post("/idea", [IdeaController::class, "store"])->name("idea.create");
+Route::group(["prefix"=> "ideas/", "as"=> "idea."], function () {
 
-Route::get("/idea/{idea}", [IdeaController::class, "show"])->name("idea.show");
+    Route::post("", [IdeaController::class, "store"])->name("create");
 
-Route::get("/idea/{idea}/edit", [IdeaController::class, "edit"])->name("idea.edit");
+    Route::get("{idea}", [IdeaController::class, "show"])->name("show");
 
-Route::put("/idea/{idea}", [IdeaController::class, "update"])->name("idea.update");
+    Route::group(["middleware" => ["auth"]], function () {
 
-Route::delete("/idea/{idea}", [IdeaController::class, "destroy"])->name("idea.destroy");
+        Route::get("{idea}/edit", [IdeaController::class, "edit"])->name("edit");
 
-Route::post("/idea/{idea}/comments", [CommentController::class, "store"])->name("idea.comments.create");
+        Route::put("{idea}", [IdeaController::class, "update"])->name("update");
+
+        Route::delete("{idea}", [IdeaController::class, "destroy"])->name("destroy");
+
+        Route::post("{idea}/comments", [CommentController::class, "store"])->name("comments.create");
+
+    });
+
+});
 
 Route::get("/register", [AuthController::class, "register"])->name("register");
 
